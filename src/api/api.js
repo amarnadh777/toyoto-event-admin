@@ -36,14 +36,27 @@ export const generatdPdf = async (participantsId) => {
 }
 
 export const deleteParticipant = async (participantId) => {
+
     try {
-        const response = await axiosInstance.delete(`/participants/${participantId}`);
+
+        const response = await axiosInstance.delete(
+            `/participants/${participantId}`
+        );
+
         return response.data;
+
     } catch (error) {
+
         console.error("Error deleting participant:", error);
-        throw error;
+
+        // ⭐ Throw backend message properly
+        throw error.response?.data || {
+            message: "Failed to delete participant"
+        };
+
     }
-}
+
+};
 
 export const updateParticipant = async (participantId, updatedData) => {
     try {

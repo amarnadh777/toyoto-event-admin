@@ -455,7 +455,7 @@ const handleConfirmDelete = async () => {
 
     console.error(err);
 
-    toast.error("Failed to delete participant");
+  toast.error(err.message || "Failed to delete participant");
 
   }
 
