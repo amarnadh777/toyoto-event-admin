@@ -1,3 +1,5 @@
+
+
 import React, { useState, useEffect } from 'react';
 import { 
   Plus, Download, Eye, Edit, Trash2, CheckCircle, XCircle, X, Phone 
@@ -34,7 +36,7 @@ const CreateModal = ({ isOpen, onClose, onCreate }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-200">
         <div className="flex justify-between items-center p-5 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-800">Add New Participant</h3>
+          <h3 className="text-lg font-bold text-gray-800">Add New Participant</h3>
           <button onClick={onClose}><X size={20} /></button>
         </div>
         <div className="p-6 space-y-4">
@@ -74,7 +76,7 @@ const DeleteModal = ({ isOpen, onClose, onConfirm, participantName }) => {
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
             <Trash2 className="h-6 w-6 text-red-600" />
           </div>
-          <h3 className="text-lg font-medium text-gray-900">Delete Participant</h3>
+          <h3 className="text-lg font-bold text-gray-900">Delete Participant</h3>
           <p className="text-sm text-gray-500 mt-2">
             Are you sure you want to delete <strong>{participantName}</strong>?
           </p>
@@ -111,7 +113,7 @@ const EditModal = ({ isOpen, onClose, onSave, participant }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
         <div className="flex justify-between items-center p-5 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-800">Edit Participant</h3>
+          <h3 className="text-lg font-bold text-gray-800">Edit Participant</h3>
           <button onClick={onClose}><X size={20} className="text-gray-400" /></button>
         </div>
         <div className="p-6 space-y-4">
@@ -288,7 +290,7 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {stats.map((stat, index) => (
             <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col justify-between h-32">
-              <h3 className="text-gray-500 font-medium text-sm uppercase tracking-wide">{stat.label}</h3>
+              <h3 className="text-gray-500 font-bold text-sm uppercase tracking-wide">{stat.label}</h3>
               <p className={`text-4xl font-bold ${stat.color}`}>{stat.value}</p>
             </div>
           ))}
@@ -297,7 +299,7 @@ const AdminDashboard = () => {
         {/* Table Section */}
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h2 className="text-xl font-semibold text-gray-800">Participants List</h2>
+            <h2 className="text-xl font-bold text-gray-800">Participants List</h2>
             
             {/* Filters & Sort Controls */}
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
@@ -331,19 +333,21 @@ const AdminDashboard = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="bg-gray-50 border-b border-gray-200">
-                    <th className="p-4 text-xs font-semibold text-gray-800 text-center uppercase tracking-wider">No</th>
-                    <th className="p-4 text-xs font-semibold text-gray-800 text-center uppercase tracking-wider">Name</th>
-                    <th className="p-4 text-xs font-semibold text-gray-800 uppercase tracking-wider text-center">Status</th>
-                    <th className="p-4 text-xs font-semibold text-gray-800 uppercase tracking-wider text-center">Time</th>
-                    <th className="p-4 text-xs font-semibold text-gray-800 uppercase tracking-wider text-center">QR</th>
-                    <th className="p-4 text-xs font-semibold text-gray-800 uppercase tracking-wider text-right">Actions</th>
+                  <tr className="bg-gray-100 border-b border-gray-200">
+                    {/* BOLDED HEADERS HERE */}
+                    <th className="p-4 text-sm font-bold text-gray-900 text-center uppercase tracking-wider">NO</th>
+                    <th className="p-4 text-sm font-bold text-gray-900 text-center uppercase tracking-wider">Queue No</th>
+                    <th className="p-4 text-sm font-bold text-gray-900 text-center uppercase tracking-wider">Name</th>
+                    <th className="p-4 text-sm font-bold text-gray-900 text-center uppercase tracking-wider">Status</th>
+                    <th className="p-4 text-sm font-bold text-gray-900 text-center uppercase tracking-wider">Time</th>
+                    <th className="p-4 text-sm font-bold text-gray-900 text-center uppercase tracking-wider">QR</th>
+                    <th className="p-4 text-sm font-bold text-gray-900 text-right uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {processedParticipants.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className="p-6 text-center text-gray-500">
+                      <td colSpan="7" className="p-6 text-center text-gray-500">
                         No participants found
                       </td>
                     </tr>
@@ -351,8 +355,13 @@ const AdminDashboard = () => {
                     processedParticipants.map((item, idx) => (
                       <tr key={item._id} className="hover:bg-gray-50 transition-colors">
                         
-                        {/* FIXED: Only show listNumber if they are checked in! */}
-                        <td className="p-4 text-gray-600 text-center font-medium">
+                        {/* 1. VISUAL ROW NUMBER */}
+                        <td className="p-4 text-gray-400 text-center text-sm">
+                          {idx + 1}
+                        </td>
+
+                        {/* 2. QUEUE NUMBER (From Backend) */}
+                        <td className="p-4 text-indigo-600 font-bold text-center">
                           {item.checkedIn ? (item.listNumber || "—") : "—"}
                         </td>
 
