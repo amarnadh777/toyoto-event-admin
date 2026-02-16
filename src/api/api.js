@@ -16,24 +16,69 @@ export const getParticipants = async () => {
   const response = await axiosInstance.get("/participants/list-all");
   return response.data;
 }
-
-export const generatdPdf = async (participantsId) => {
+export const generatdPdf = async (participantId) => {
   try {
-    
-    const response = await axiosInstance.get(`/participants/pdf/${participantsId}`, {
-      responseType: 'blob'
+
+    const response = await axiosInstance.get(
+      `/participants/pdf/${participantId}`,
+      {
+        responseType: "blob",
+      }
+    );
+
+    const contentDisposition = response.headers["content-disposition"];
+
+    let fileName = "ticket.pdf";
+
+    if (contentDisposition) {
+
+      // ✅ FIRST priority → filename* (Arabic support)
+      const utf8Match = contentDisposition.match(/filename\*\=UTF-8''([^;]+)/i);
+
+      if (utf8Match && utf8Match[1]) {
+        fileName = decodeURIComponent(utf8Match[1]);
+      }
+
+      // ✅ fallback → filename
+      else {
+        const normalMatch = contentDisposition.match(/filename="?([^"]+)"?/i);
+        if (normalMatch && normalMatch[1]) {
+          fileName = normalMatch[1];
+        }
+      }
+
+    }
+
+    console.log("Arabic filename:", fileName);
+
+    const blob = new Blob([response.data], {
+      type: "application/pdf"
     });
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
+
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
     link.href = url;
-    link.setAttribute('download', 'participants.pdf');
+    link.download = fileName;
+
     document.body.appendChild(link);
-    link.click(); 
+    link.click();
+
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
   } catch (error) {
-    console.error("Error generating PDF:", error);  
-    
+    console.error("Download error:", error);
   }
-}
+};
+
+
+
+
+
+
+
+
 
 export const deleteParticipant = async (participantId) => {
 
